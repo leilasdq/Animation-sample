@@ -2,6 +2,7 @@ package com.example.animtest
 
 import android.animation.*
 import android.annotation.SuppressLint
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -41,6 +42,21 @@ class MainActivity : AppCompatActivity() {
         }
         fadeButton.setOnClickListener {
             fade()
+        }
+        colorizeButton.setOnClickListener {
+            changeBackgroundColor()
+        }
+    }
+
+    @SuppressLint("ObjectAnimatorBinding")
+    private fun changeBackgroundColor() {
+        ObjectAnimator.ofArgb(star.parent, "backgroundColor", Color.BLACK, Color.RED).apply {
+            disableViewDuringAnimation(colorizeButton)
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+            duration = 5000
+            startDelay = 1000
+            start()
         }
     }
 
