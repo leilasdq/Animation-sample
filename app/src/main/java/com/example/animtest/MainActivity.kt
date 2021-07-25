@@ -6,8 +6,13 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.appcompat.widget.AppCompatImageView
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,6 +51,57 @@ class MainActivity : AppCompatActivity() {
         colorizeButton.setOnClickListener {
             changeBackgroundColor()
         }
+        showerButton.setOnClickListener {
+            shower()
+        }
+    }
+
+    @SuppressLint("Recycle")
+    private fun shower() {
+        val newStar = createNewStar()
+
+        AnimatorSet().playTogether(
+            ObjectAnimator.ofFloat(
+                newStar,
+                View.TRANSLATION_Y,
+                (star.parent as ViewGroup).height.toFloat()
+            )
+                .apply {
+                    interpolator = AccelerateInterpolator(1f)
+                    duration = 5000
+                    start()
+                },
+            ObjectAnimator.ofFloat(newStar, View.ROTATION, 0f, 360f).apply {
+                interpolator = LinearInterpolator()
+                startDelay = 500
+                duration = 5000
+                start()
+            }
+        )
+    }
+
+    private fun createNewStar(): AppCompatImageView {
+        var starW: Float = star.width.toFloat()
+        var starH: Float = star.height.toFloat()
+
+        val newStar = AppCompatImageView(this).apply {
+            setImageResource(R.drawable.ic_star)
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+            scaleX = Math.random().toFloat() * 1.5f + .1f
+            scaleY = this.scaleX
+            starW = scaleX
+            starH = scaleY
+        }
+        ((star.parent) as ViewGroup).addView(newStar)
+        newStar.translationX =
+            Math.random().toFloat() * (star.parent as ViewGroup).width - starW / 2
+        newStar.translationY =
+            Math.random().toFloat() * (star.parent as ViewGroup).height - starH / 2
+
+        return newStar
     }
 
     @SuppressLint("ObjectAnimatorBinding")
