@@ -39,11 +39,25 @@ class MainActivity : AppCompatActivity() {
         scaleButton.setOnClickListener {
             scale()
         }
+        fadeButton.setOnClickListener {
+            fade()
+        }
+    }
+
+    private fun fade() {
+        ObjectAnimator.ofFloat(star, View.ALPHA, 0f).apply {
+            duration = 3000
+            startDelay = 500
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+            disableViewDuringAnimation(fadeButton)
+            start()
+        }
     }
 
     @SuppressLint("Recycle")
     private fun scale() {
-        AnimatorSet().playTogether(
+        /*AnimatorSet().playTogether(
             ObjectAnimator.ofFloat(star, View.SCALE_X, 20f).apply {
                 duration = 3000
                 startDelay = 500
@@ -60,7 +74,19 @@ class MainActivity : AppCompatActivity() {
                 disableViewDuringAnimation(scaleButton)
                 start()
             }
-        )
+        )*/
+        ObjectAnimator.ofPropertyValuesHolder(
+            star,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 20f),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 20f)
+        ).apply {
+            duration = 3000
+            startDelay = 500
+            repeatCount = 1
+            repeatMode = ValueAnimator.REVERSE
+            disableViewDuringAnimation(scaleButton)
+            start()
+        }
 
     }
 
